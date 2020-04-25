@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suse.tg.background.dao.ScenicSpotDao">
+	
+<!-- sql元素用于对其它元素中的共性进行提取，其它
+       元素用到此元素内容，可以使用include元素进行包含 -->
+   <sql id="queryWhereId">
+     from scenic_spot
+     <where>
+            <if test="name!=null and uname!=''">
+               name like concat("%",#{name},"%")
+            </if>
+     </where>
+   </sql>
+	
+	<select id="findScenicSpots"
+		resultType="com.suse.tg.background.DO.ScenicSpot">
+		select id,name,details,addr,local_id,score,level,ticket 
+		<!-- select *  -->
+		<include refid="queryWhereId"/>
+		limit #{startIndex},#{pageSize}
+	</select>
+	
+	<select id="getRowCount"
+		resultType="Integer">
+		select count(*)
+		<include refid="queryWhereId"/>
+	</select>
+</mapper>
